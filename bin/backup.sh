@@ -1,10 +1,23 @@
 #!/bin/bash
 
-#Version 2.0
-#Converting to functions
-#Authored by DT
-#Edited by DT
-#License: GPL v3
+#    This file is part of Rsync Backup Program (RBP).
+#
+#    RBP is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    RBP is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with BRBP.  If not, see <http://www.gnu.org/licenses/>.
+#
+#    Author: David Thorne
+#    Copyright (c) 2011  
+#    Version 3.0
 
 #First sync all remote machines to our backup and create the backup log
 FILE=`date +%d%m%y`
@@ -153,7 +166,13 @@ rmtar_dir
 
 TIME=`date`
 echo "Tar finish at $TIME" >> $BACKUPFILE
-BACKUPSIZE=`du -sh $BACKUPPATH`
+for i in `ls -l |grep -v database |grep -v bin |grep -v logs | grep -v total | grep -v scripts | awk {'print $9'}`
+do
+        x=`du -sh $i |awk {'print $2": "$1'}`
+        j=$j'\n'$x
+done
+
+BACKUPSIZE=`echo $j`
 
 gzip $BACKUPFILE
 
