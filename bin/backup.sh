@@ -153,7 +153,13 @@ rmtar_dir
 
 TIME=`date`
 echo "Tar finish at $TIME" >> $BACKUPFILE
-BACKUPSIZE=`du -sh $BACKUPPATH`
+for i in `ls -l |grep -v database |grep -v bin |grep -v logs | grep -v total | grep -v scripts | awk {'print $9'}`
+do
+        x=`du -sh $i |awk {'print $2": "$1'}`
+        j=$j'\n'$x
+done
+
+BACKUPSIZE=`echo $j`
 
 gzip $BACKUPFILE
 
